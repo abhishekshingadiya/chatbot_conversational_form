@@ -8,9 +8,16 @@ from langchain.memory import MongoDBChatMessageHistory
 from langchain.prompts.prompt import PromptTemplate
 from pydantic import BaseModel, Field
 from streamlit_chat import message
+from dotenv import load_dotenv
 
+load_dotenv()
 # setup up mongodb client
-uri = "mongodb+srv://abhishekshingadiya2543:YfFWy5h0dMIyyvyr@cluster0.mrhtw7e.mongodb.net/?retryWrites=true&w=majority"
+mongodb_url = os.getenv("MONGODB_URL")
+db_name = os.getenv("DB_NAME")
+db_user = os.getenv("DB_USER")
+db_password = os.getenv("DB_PASSWORD")
+db_host = os.getenv("DB_HOST")
+db_port = os.getenv("DB_PORT")
 
 # setup openai
 os.environ["OPENAI_API_KEY"] = ""
@@ -27,7 +34,7 @@ Conversation Workflow:
 5. When the 'ask_for' list is empty, thank the user and offer further assistance.
 6. Remember not to use greetings or list questions; keep it conversational.
 7. Don't revel information to the user unless they ask for it.
-8. Don't use AI: and bot: kind of prefix in output.
+8. Strictly don't use AI: and bot: kind of prefix in output.
 
 Previous conversation:
 {history}
@@ -41,7 +48,7 @@ Available information of user: avl_info_list
 
 
 def update_customer_table(session_id: object, data: object) -> object:
-    conn = psycopg2.connect(database="learntube", user="postgres", password="", host="localhost", port="5432")
+    conn = psycopg2.connect(database=db_name, user=db_user, password=db_password, host=db_host, port=db_port)
     cursor = conn.cursor()
     cursor.execute("UPDATE customer SET name = %s, city = %s, email = %s WHERE id = %s",
                    (data['name'], data['city'], data['email'], session_id))
@@ -51,7 +58,7 @@ def update_customer_table(session_id: object, data: object) -> object:
 
 
 def check_details_from_db(session_id: object) -> object:
-    conn = psycopg2.connect(database="learntube", user="postgres", password="", host="localhost", port="5432")
+    conn = psycopg2.connect(database=db_name, user=db_user, password=db_password, host=db_host, port=db_port)
     cursor = conn.cursor()
 
     # First, let's check if the session_id exists in the customer table.
@@ -107,7 +114,7 @@ def add_non_empty_details(current_details: PersonalDetails, new_details: Persona
     return updated_details
 
 
-def conversation_chat(input: object, session_id: object,llm=llm) -> object:
+def conversation_chat(input: object, session_id: object, llm=llm) -> object:
     if session_id:
         existing_info_from_db = check_details_from_db(session_id)
         existing_info_of_user = PersonalDetails(**existing_info_from_db)
@@ -115,7 +122,7 @@ def conversation_chat(input: object, session_id: object,llm=llm) -> object:
         existing_info_of_user = PersonalDetails()
 
     message_history = MongoDBChatMessageHistory(
-        connection_string=uri, session_id=session_id
+        connection_string=mongodb_url, session_id=session_id
     )
     ner_chain = create_tagging_chain_pydantic(PersonalDetails, llm)
     extractions = ner_chain.run(input)  # Extract information using your NER chain
@@ -169,7 +176,7 @@ def conversation_chat(input: object, session_id: object,llm=llm) -> object:
         return conv
 
 
-st.title("LearnTube ChatBot\n by CareerNinja🧑🏽‍")
+st.title("LearnTube ChatBot🧑🏽‍")
 
 
 # add field to sidebar gpt_token and session_id
@@ -188,7 +195,7 @@ def initialize_session_state():
         st.session_state['session_id'] = None
 
 
-def display_chat_history(session_id: object,llm):
+def display_chat_history(session_id: object, llm):
     if not session_id:
         st.warning("Please enter a session ID in the sidebar")
         return
@@ -201,7 +208,7 @@ def display_chat_history(session_id: object,llm):
             submit_button = st.form_submit_button(label='Send')
 
         if submit_button and user_input:
-            output = conversation_chat(user_input, session_id=session_id,llm=llm)
+            output = conversation_chat(user_input, session_id=session_id, llm=llm)
             st.session_state['past'].append(user_input)
             st.session_state['generated'].append(output)
 
@@ -227,9 +234,9 @@ def main():
 
     if gpt_token:
         os.environ["OPENAI_API_KEY"] = gpt_token
-        global llm, ner_chain
+        global llm
         llm = ChatOpenAI(temperature=0)
-    display_chat_history(st.session_state['session_id'],llm=llm)
+    display_chat_history(st.session_state['session_id'], llm=llm)
 
 
 if __name__ == "__main__":

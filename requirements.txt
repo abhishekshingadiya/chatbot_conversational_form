@@ -67,6 +67,7 @@ pydeck==0.8.1b0
 Pygments==2.16.1
 pymongo==4.6.0
 python-dateutil==2.8.2
+python-dotenv==1.0.0
 pytz==2023.3.post1
 PyYAML==6.0.1
 referencing==0.30.2
