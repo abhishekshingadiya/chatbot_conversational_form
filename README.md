@@ -1,23 +1,26 @@
 
 # Chatbot Conversational Form
-
-Chatbot Conversational Form is a small demo Python project that allows you to create conversational forms using a chatbot-like interface. This project is to simplify the process of creating dynamic and interactive forms for various applications, such as surveys, questionnaires, feedback forms, and more.
+Chatbot Conversational Form is a demo project that simplifies creating interactive forms using a chatbot-style interface for tasks like surveys, questionnaires, and feedback forms.
 
 ## Features
+Collect User Information: The chatbot gathers user information in a natural and non-intrusive manner. It explains why it needs specific details from a predefined list.
 
-- Collect User Information: The chatbot's primary function is to collect user information piece by piece, making the process feel natural and non-intrusive. It explains the need for gathering information and asks for specific details from a predefined 'ask_for' list.
+Empathetic Explanation: The chatbot kindly explains why it requests information, creating a user-friendly experience.
 
-- Empathetic Explanation: When requesting information from users, the chatbot explains why it needs that particular piece of information. It is persuasive yet empathetic in its approach, creating a comfortable user experience.
+Rapport Building: The chatbot engages in small talk to build rapport with users, maintaining a friendly atmosphere.
 
-- Rapport Building: The chatbot is designed to build rapport with users by transitioning into small talk when appropriate. This helps to create a friendly and conversational atmosphere while maintaining the data collection process.
+Handling User Hesitation: The chatbot provides reassurance and alternatives if users hesitate, making corrections easy.
 
-- Handling User Hesitation: If a user hesitates or is unsure about providing information, the chatbot offers reassurance and alternative options. It is flexible and handles corrections or updates to user details trustworthily.
+Thankful and Supportive: When the task is complete, the chatbot expresses gratitude and offers further assistance.
 
-- Thankful and Supportive: When the 'ask_for' list is empty, the chatbot expresses gratitude for the user's cooperation and offers further assistance. It keeps the conversation smooth and user-focused.
+Conversation Workflow: The chatbot follows a clear and engaging conversation structure, avoiding list questions.
 
-- Conversation Workflow: The chatbot follows a well-defined conversation workflow, ensuring that the information gathering process is clear and engaging. It maintains a conversational tone and avoids using greetings or list questions.
+Privacy and User-Centric: The chatbot prioritizes user comfort and data privacy.
 
-- Privacy and User-Centric: The chatbot does not reveal information to the user unless they specifically request it. It prioritizes the user's comfort and data privacy throughout the conversation.
+
+
+## Tech Functionality
+Used langchain's ConversationChain for chatbot and create_tagging_chain_pydantic for extract and validation of user input.
 
 
 ## Installation
