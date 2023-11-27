@@ -55,7 +55,7 @@ You can follow mongodb for storing data but here I took postgres DB.
 
 Create table using below query:
 ```bash
-CREATE TABLE customer2 (
+CREATE TABLE customer (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255),
     city VARCHAR(255),
